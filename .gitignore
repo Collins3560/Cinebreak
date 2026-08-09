@@ -1,0 +1,7 @@
+# build artifacts
+discdir/
+*.iso
+*.class
+payloads/*/*.jar
+__pycache__/
+*.pyc
