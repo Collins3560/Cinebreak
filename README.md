@@ -38,6 +38,25 @@ A **one-shot, chainable PS5 jailbreak** built on [Gezine's BD-JB5](https://githu
 | `tools/` | Local console simulators for testing without hardware |
 | `CHAIN.md` | Every link of the chain mapped and documented |
 
+
+## 🧰 Cinebreak Suite (v1)
+
+| Tool | What it does |
+|---|---|
+| `cinebreak` | Unified CLI: `build` · `find` · `chain` · `payload new <name>` · `status` · `update` |
+| `payloads/cinebreak-shell/` | **Network command shell** — after the chain lands, `nc <ps5> 9026` gives kernel read/write, memory dumps, notifications |
+| `tools/kernel-offsets.py` | Pattern scanner for the 5 kernel offsets Poopsploit needs — future firmware drops don't break the chain (`selftest` included) |
+| `.github/workflows/build.yml` | CI: auto-builds the ISO on push + weekly (tracks upstream offset changes) |
+
+**Shell quickstart:**
+```bash
+./cinebreak chain <ps5-ip> --elf <elfldr-deployed-tool>   # or push cinebreak-shell.jar
+nc <ps5-ip> 9026
+> kread 0xffffffff...      # kernel read32
+> kdump <addr> 64          # hex dump
+> notify hello             # PS5 notification
+```
+
 ## 🔨 Build the ISO
 
 ```bash

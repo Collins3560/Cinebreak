@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Cinebreak Suite CLI - one tool to rule the whole chain."""
+import argparse, os, subprocess, sys, time, socket
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+def sh(cmd, **kw):
+    r = subprocess.run(cmd, shell=True, text=True, capture_output=True, **kw)
+    if r.stdout: print(r.stdout, end="")
+    if r.returncode != 0 and r.stderr: print(r.stderr, end="", file=sys.stderr)
+    return r.returncode
+
+def cmd_build(args):
+    print("[*] building ISO (Cinebreak engine)")
+    rc = sh(f"bash {ROOT}/build.sh {args.sdk}")
+    print("[+] build done" if rc == 0 else "[-] build failed")
+
+def cmd_find(args):
+    sys.path.insert(0, ROOT)
+    from ps5find import find_ps5, PORTS
+    ip = find_ps5(args.net)
+    if ip: print(f"[+] console: {ip}")
+
+def cmd_chain(args):
+    sys.path.insert(0, ROOT)
+    from ps5chain import chain, JAR_PATH
+    chain(args.ip, args.elf)
+
+def cmd_payload_new(args):
+    name = args.name
+    pdir = os.path.join(ROOT, "payloads", name)
+    if os.path.exists(pdir): sys.exit("[-] payload exists")
+    os.makedirs(f"{pdir}/src/org/bdj/external")
+    open(f"{pdir}/manifest.txt", "w").write(
+        f"Manifest-Version: 1.0\nMain-Class: org.bdj.external.{name.capitalize()}\n")
+    open(f"{pdir}/Makefile", "w").write(
+        "JAR_NAME := %s.jar\n\nMAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))\n"
+        "BDJSDK_HOME  ?= $(MAKEFILE_DIR)/../../../..\nJAVA8_HOME    ?= $(BDJSDK_HOME)/host/jdk8\n"
+        "JAVAC := $(JAVA8_HOME)/bin/javac\nJAR   := $(JAVA8_HOME)/bin/jar\n\n"
+        "CLASSPATH := $(BDJSDK_HOME)/target/lib/enhanced-stubs.zip:$(BDJSDK_HOME)/target/lib/rt.jar:../../discdir/BDMV/JAR/00000.jar\n"
+        "SOURCES := $(wildcard src/org/bdj/external/*.java)\n"
+        "JFLAGS := -Xlint:-options -source 1.4 -target 1.4\n\n"
+        "all: $(JAR_NAME)\n\n$(JAR_NAME): $(SOURCES) manifest.txt\n"
+        "\t$(JAVAC) $(JFLAGS) -cp $(CLASSPATH) $(SOURCES)\n"
+        "\t$(JAR) cfm $@ manifest.txt -C src/ .\n\nclean:\n"
+        "\trm -f src/org/bdj/external/*.class $(JAR_NAME)\n" % name)
+    tmpl = f'''package org.bdj.external;
+
+import org.bdj.Status;
+
+public class {name.capitalize()} {{
+    public static void main(String[] args) {{
+        Status.println("=== {name} payload ===");
+        Status.println("hello from Cinebreak");
+    }}
+}}
+'''
+    open(f"{pdir}/src/org/bdj/external/{name.capitalize()}.java", "w").write(tmpl)
+    print(f"[+] scaffolded payloads/{name}")
+    rc = sh(f"make -C {pdir} BDJSDK_HOME={args.sdk}")
+    print("[+] compiled" if rc == 0 else "[-] compile failed (need built discdir + sdk)")
+
+def cmd_status(args):
+    print("[*] Cinebreak status")
+    for name in ("ps5chain.py", "ps5find.py", "cinebreak", "build.sh", "CHAIN.md"):
+        p = os.path.join(ROOT, name)
+        print(f"  {'OK ' if os.path.exists(p) else 'MISS'} {name}")
+    built = os.path.exists(os.path.join(ROOT, "discdir/BDMV/JAR/00000.jar"))
+    print(f"  {'OK ' if built else 'NO '} engine jar (run 'cinebreak build' first)")
+    payloads = [d for d in os.listdir(os.path.join(ROOT, "payloads"))
+                if os.path.isdir(os.path.join(ROOT, "payloads", d)) and not d.startswith(".")]
+    print(f"  payloads: {', '.join(payloads)}")
+
+def cmd_update(args):
+    print("[*] checking Gezine/BD-JB5 for updates...")
+    rc = sh("git ls-remote https://github.com/Gezine/BD-JB5.git HEAD | cut -c1-12")
+    print(f"[+] upstream HEAD: {rc and rc or ''}" if isinstance(rc, str) else "[-] fetch failed")
+
+def main():
+    p = argparse.ArgumentParser(prog="cinebreak", description="Cinebreak Suite - PS5 BD-J chain ops")
+    sub = p.add_subparsers(dest="cmd")
+    b = sub.add_parser("build", help="build the ISO"); b.add_argument("sdk", nargs="?", default=os.path.expanduser("~/ps5dev/bdj-sdk"))
+    f = sub.add_parser("find", help="find console on LAN"); f.add_argument("net", default="192.168.1.0/24")
+    c = sub.add_parser("chain", help="run full chain"); c.add_argument("ip"); c.add_argument("--elf")
+    pn = sub.add_parser("payload", help="scaffold + compile a new payload"); pn.add_argument("name"); pn.add_argument("sdk", nargs="?", default=os.path.expanduser("~/ps5dev/bdj-sdk"))
+    sub.add_parser("status", help="kitchen check")
+    sub.add_parser("update", help="check upstream")
+    a = p.parse_args()
+    {"build": cmd_build, "find": cmd_find, "chain": cmd_chain, "payload": cmd_payload_new,
+     "status": cmd_status, "update": cmd_update}.get(a.cmd, lambda x: p.print_help())(a)
+
+if __name__ == "__main__":
+    main()
