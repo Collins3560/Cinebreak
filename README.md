@@ -1,5 +1,11 @@
 # 🎬 Cinebreak
 
+![release](https://img.shields.io/github/v/release/Collins3560/Cinebreak)
+![license](https://img.shields.io/github/license/Collins3560/Cinebreak)
+![stars](https://img.shields.io/github/stars/Collins3560/Cinebreak)
+![updated](https://img.shields.io/github/last-commit/Collins3560/Cinebreak)
+
+
 A **one-shot, chainable PS5 jailbreak** built on [Gezine's BD-JB5](https://github.com/Gezine/BD-JB5) — a Blu-ray Disc Java sandbox escape — extended into a full *userland → kernel → root → homebrew* chain with automation tooling.
 
 ```
