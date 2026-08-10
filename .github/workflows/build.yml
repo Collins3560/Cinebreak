@@ -1,0 +1,35 @@
+name: build-iso
+on:
+  push: { branches: [master] }
+  workflow_dispatch:
+  schedule: [{ cron: "0 3 * * 1" }]  # weekly: track upstream offsets
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install JDK 8
+        run: |
+          curl -sL -o jdk8.tar.gz "https://api.adoptium.net/v3/binary/latest/8/ga/linux/x64/jdk/hotspot/normal/eclipse"
+          tar xzf jdk8.tar.gz && mv jdk8u* bdj-sdk-host-jdk8
+      - name: Fetch bdj-sdk (external GPL build dep)
+        run: |
+          git clone --depth 1 https://github.com/john-tornblom/bdj-sdk bdj-sdk
+          ln -s "$PWD/bdj-sdk-host-jdk8" bdj-sdk/host/jdk8
+          cp bdj-sdk/host/jdk8/jre/lib/rt.jar bdj-sdk/target/lib/rt.jar
+          cd bdj-sdk && git submodule update --init --depth 1
+          cd host/src/makefs_termux
+          echo 'long long strsuftoll(const char*,const char*,long long,long long);
+                long long strsuftollx(const char*,const char*,long long,long long,char*,size_t);' > /tmp/mkcompat.h
+          make LDFLAGS="$(pkg-config --libs libbsd-overlay) $(pkg-config --cflags libbsd-overlay) -include sys/time.h -include time.h -include /tmp/mkcompat.h -D_DEFAULT_SOURCE"
+          make install DESTDIR="$PWD/../../.."
+      - name: Build ISO
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -yqq build-essential libbsd-dev pkg-config
+          make BDJSDK_HOME="$PWD/bdj-sdk"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cinebreak-iso
+          path: BD-JB5-2.0.iso

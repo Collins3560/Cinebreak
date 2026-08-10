@@ -57,6 +57,22 @@ nc <ps5-ip> 9026
 > notify hello             # PS5 notification
 ```
 
+
+## 🛰️ Cinebreak Hub — live scene operations
+
+```bash
+./cinebreak scene          # live GitHub tracker: latest releases from Gezine, etaHEN,
+                           # ps5-linux, kexp, SDKs + cached matrix
+./cinebreak scene --json   # machine-readable
+./cinebreak hub            # zero-dependency web dashboard on :8777
+                           # (scene status + LAN console discovery)
+python3 hub/autoload.py demo   # build a USB autoload package (autoload.txt + payloads)
+```
+
+Scene tracker covers 12 projects: BD-JB5, Y2JB, Luac0re, P2JB port, etaHEN (+cheats),
+GoldHEN, ps5-linux, kexp, both SDKs, and scene tooling — with latest tags/dates pulled
+live from GitHub and cached locally.
+
 ## 🔨 Build the ISO
 
 ```bash

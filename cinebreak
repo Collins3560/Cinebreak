@@ -76,6 +76,12 @@ def cmd_update(args):
     rc = sh("git ls-remote https://github.com/Gezine/BD-JB5.git HEAD | cut -c1-12")
     print(f"[+] upstream HEAD: {rc and rc or ''}" if isinstance(rc, str) else "[-] fetch failed")
 
+def cmd_scene(args):
+    sh(f"python3 {ROOT}/hub/scene.py --refresh" + (" --json" if args.json else ""))
+
+def cmd_hub(args):
+    sh(f"python3 {ROOT}/hub/hub_server.py --port {args.port}")
+
 def main():
     p = argparse.ArgumentParser(prog="cinebreak", description="Cinebreak Suite - PS5 BD-J chain ops")
     sub = p.add_subparsers(dest="cmd")
@@ -85,9 +91,11 @@ def main():
     pn = sub.add_parser("payload", help="scaffold + compile a new payload"); pn.add_argument("name"); pn.add_argument("sdk", nargs="?", default=os.path.expanduser("~/ps5dev/bdj-sdk"))
     sub.add_parser("status", help="kitchen check")
     sub.add_parser("update", help="check upstream")
+    sc = sub.add_parser("scene", help="live scene tracker (GitHub)"); sc.add_argument("--json", action="store_true")
+    hb = sub.add_parser("hub", help="web dashboard"); hb.add_argument("--port", type=int, default=8777)
     a = p.parse_args()
     {"build": cmd_build, "find": cmd_find, "chain": cmd_chain, "payload": cmd_payload_new,
-     "status": cmd_status, "update": cmd_update}.get(a.cmd, lambda x: p.print_help())(a)
+     "status": cmd_status, "update": cmd_update, "scene": cmd_scene, "hub": cmd_hub}.get(a.cmd, lambda x: p.print_help())(a)
 
 if __name__ == "__main__":
     main()

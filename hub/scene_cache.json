@@ -1,0 +1,150 @@
+{
+  "fetched": "2026-08-10T00:04:48.634825Z",
+  "projects": [
+    {
+      "name": "BD-JB5 (upstream)",
+      "repo": "Gezine/BD-JB5",
+      "kind": "exploit",
+      "note": "our engine - BD-J sandbox escape, kernel offsets to 13.52",
+      "tag": "2.0",
+      "date": "2026-08-04T23:40:33Z",
+      "url": "https://github.com/Gezine/BD-JB5/releases/tag/2.0",
+      "assets": [
+        "BD-JB5-2.0.iso",
+        "bdj_unpatch_1360.elf",
+        "poops_1.8.jar"
+      ]
+    },
+    {
+      "name": "Y2JB",
+      "repo": "Gezine/Y2JB",
+      "kind": "exploit",
+      "note": "YouTube userland entry, no disc needed",
+      "tag": "1.6",
+      "date": "2026-06-09T14:54:35Z",
+      "url": "https://github.com/Gezine/Y2JB/releases/tag/1.6",
+      "assets": [
+        "Y2JB_backup_1.6.12.20.zip",
+        "Y2JB_backup_1.6.4.03.zip",
+        "Y2JB_download0_1.6.zip"
+      ]
+    },
+    {
+      "name": "Luac0re",
+      "repo": "Gezine/Luac0re",
+      "kind": "exploit",
+      "note": "mast1c0re-style Lua loader",
+      "tag": "2.4",
+      "date": "2026-05-26T07:39:51Z",
+      "url": "https://github.com/Gezine/Luac0re/releases/tag/2.4",
+      "assets": [
+        "Luac0re_2.4.zip"
+      ]
+    },
+    {
+      "name": "P2JB port",
+      "repo": "matem6/P2JB-Y2JB-Porting",
+      "kind": "exploit",
+      "note": "p2jb kernel port to Y2JB host",
+      "tag": "2.6",
+      "date": "2026-05-25T16:01:20Z",
+      "url": "https://github.com/matem6/P2JB-Y2JB-Porting/releases/tag/2.6",
+      "assets": [
+        "elfldr_1320_v5.elf",
+        "p2jb.js"
+      ]
+    },
+    {
+      "name": "etaHEN",
+      "repo": "etaHEN/etaHEN",
+      "kind": "payload",
+      "note": "AIO homebrew enabler for PS5 (toolbox/plugins/overlay/cheats)",
+      "tag": "2.5B",
+      "date": "2025-12-25T05:31:40Z",
+      "url": "https://github.com/etaHEN/etaHEN/releases/tag/2.5B",
+      "assets": [
+        "etaHEN-2.5B.bin"
+      ]
+    },
+    {
+      "name": "etaHEN cheats",
+      "repo": "etaHEN/PS5_Cheats",
+      "kind": "payload",
+      "note": "PS5 cheat database",
+      "tag": "0.99",
+      "date": null,
+      "url": "https://github.com/etaHEN/PS5_Cheats/tags",
+      "assets": []
+    },
+    {
+      "name": "GoldHEN",
+      "repo": "GoldHEN/GoldHEN",
+      "kind": "payload",
+      "note": "PS4 homebrew enabler - PS5 support in 2026 builds",
+      "tag": "2.3",
+      "date": "2022-12-24T23:48:04Z",
+      "url": "https://github.com/GoldHEN/GoldHEN/releases/tag/2.3",
+      "assets": [
+        "GoldHEN_v2.3.7z"
+      ]
+    },
+    {
+      "name": "ps5-linux",
+      "repo": "ps5-linux/ps5-linux-loader",
+      "kind": "payload",
+      "note": "boot Linux on PS5",
+      "tag": "v2.4",
+      "date": "2026-07-06T08:03:05Z",
+      "url": "https://github.com/ps5-linux/ps5-linux-loader/releases/tag/v2.4",
+      "assets": [
+        "ps5-linux-loader.elf"
+      ]
+    },
+    {
+      "name": "kexp",
+      "repo": "ufm42/kexp",
+      "kind": "exploit",
+      "note": "post-jailbreak all-in-one shellcode",
+      "tag": "v1",
+      "date": "2026-05-25T16:41:57Z",
+      "url": "https://github.com/ufm42/kexp/releases/tag/v1",
+      "assets": [
+        "kexp.zip"
+      ]
+    },
+    {
+      "name": "BD-J SDK",
+      "repo": "john-tornblom/bdj-sdk",
+      "kind": "sdk",
+      "note": "build toolchain (GPL)",
+      "tag": "?",
+      "date": null,
+      "url": "https://github.com/john-tornblom/bdj-sdk",
+      "assets": []
+    },
+    {
+      "name": "PS5 payload SDK",
+      "repo": "ps5-payload-dev/sdk",
+      "kind": "sdk",
+      "note": "prospero toolchain",
+      "tag": "v0.42",
+      "date": "2026-08-02T16:35:54Z",
+      "url": "https://github.com/ps5-payload-dev/sdk/releases/tag/v0.42",
+      "assets": [
+        "ps5-payload-sdk.zip"
+      ]
+    },
+    {
+      "name": "PS5 PayloadManager",
+      "repo": "cosmicflow2512/PS5-PayloadManager",
+      "kind": "tool",
+      "note": "Windows payload manager (scene tooling)",
+      "tag": "v1.0.1",
+      "date": "2026-04-18T17:52:05Z",
+      "url": "https://github.com/cosmicflow2512/PS5-PayloadManager/releases/tag/v1.0.1",
+      "assets": [
+        "PS5PayloadManager-win-x64.exe"
+      ]
+    }
+  ]
+}
